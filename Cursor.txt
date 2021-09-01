@@ -1,0 +1,20 @@
+/*Cursor que muestre por cada habitación cuantos accesorios se ha ocupado*/
+do $$
+declare
+tabla record;
+habitaciones cursor for select habitaciones.habitacion_tipo as habitacion,
+sum (detalle_factura.detallefactura_cantidad) as cantidadAccesorios
+from detalle_factura
+join factura on factura.factura_numero=detalle_factura.factura_numero
+join habitaciones on habitaciones.habitacion_codigo=factura.habitacion_codigo
+group by habitaciones.habitacion_tipo;
+begin
+open habitaciones;
+fetch habitaciones into tabla;
+while (found) loop
+Raise notice 'Tipo de habitación: %, Cantidad de accesorios: %',
+tabla.habitacion, tabla.cantidadAccesorios;
+fetch habitaciones into tabla;
+end loop;
+end $$
+language 'plpgsql';

@@ -1,0 +1,17 @@
+/*Un gestor procedure en el que se ingrese la cedula de un cliente 
+y muestre la cantidad de fechas en el que ese cliente ha estado en el Motel*/
+create or replace function obtener_fechas_cliente(
+in codigocliente varchar,
+out numerofechas bigint)
+as $BODY$
+begin
+select count (cliente.cliente_codigo) into numerofechas
+from cliente
+join factura on factura.cliente_codigo = cliente.cliente_codigo
+where cliente.cliente_codigo = codigocliente;
+end
+$BODY$
+language plpgsql;
+
+//obtener la cantidad de veces que el cliente 1 ha ingresado al motel
+select * from obtener_fechas_cliente('1')

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Motel" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="b6d88df9-b845-4f9a-bde1-91a6f56c0a97">
+	<property name="ireport.zoom" value="0.9090909090909091"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<queryString>
+		<![CDATA[select distinct  ( case when extract (year from factura_fecha) = '2019' then '2019'
+			when extract (year from factura_fecha) = '2020' then '2020'
+			when extract (year from factura_fecha) = '2021' then '2021'end) as años, sum (factura_total) as total
+from factura
+group by años order by años asc;]]>
+	</queryString>
+	<field name="años" class="java.lang.String"/>
+	<field name="total" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<staticText>
+				<reportElement x="257" y="18" width="348" height="42" uuid="c300b5ac-3455-450d-b27b-51383e80bf53"/>
+				<textElement textAlignment="Center">
+					<font size="32"/>
+				</textElement>
+				<text><![CDATA[Ganancias Por Año]]></text>
+			</staticText>
+		</band>
+	</title>
+	<summary>
+		<band height="301" splitType="Stretch">
+			<stackedBarChart>
+				<chart>
+					<reportElement x="257" y="42" width="348" height="185" uuid="9a56c73f-556c-40bb-ab0b-4dc52d260a53"/>
+					<chartTitle/>
+					<chartSubtitle/>
+					<chartLegend/>
+				</chart>
+				<categoryDataset>
+					<categorySeries>
+						<seriesExpression><![CDATA[$F{años}]]></seriesExpression>
+						<categoryExpression><![CDATA[$F{años}]]></categoryExpression>
+						<valueExpression><![CDATA[$F{total}]]></valueExpression>
+					</categorySeries>
+				</categoryDataset>
+				<barPlot>
+					<plot/>
+					<itemLabel/>
+					<categoryAxisFormat>
+						<axisFormat/>
+					</categoryAxisFormat>
+					<valueAxisFormat>
+						<axisFormat/>
+					</valueAxisFormat>
+				</barPlot>
+			</stackedBarChart>
+		</band>
+	</summary>
+</jasperReport>

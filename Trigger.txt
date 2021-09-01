@@ -1,0 +1,35 @@
+/*TRIGGER: Trigger que cuando un cliente tenga 2 reputaciones negativa, 
+no se le permite más el acceso.*/
+create function restriccionAcceso() 
+returns Trigger as $restriccionAcceso$
+declare
+mala_reputacion int;
+begin
+select count (*) into mala_reputacion 
+from factura where cliente_codigo = new.cliente_codigo;
+if (mala_reputacion > 2) then
+raise exception 'No se le permite mas el acceso por tener 2 reputaciones malas';
+end if;
+return new;
+end
+$restriccionAcceso$
+language plpgsql;
+
+create trigger restriccionAcceso before insert
+on factura for each row
+execute procedure restriccionAcceso();
+
+//obtener la cantidad de reputaciones de un cliente
+select factura_numero, factura_fecha, 
+factura_reputacion as reputaciones, mala_reputacion 
+from factura
+where cliente_codigo='1'
+group by factura_numero
+order by factura_numero asc; 
+
+//Insercion de dicho cliente en este caso ya cuenta 
+con 2 reputaciones malas por lo cual no lo dejara ingresar
+INSERT INTO public.factura(factura_fecha, factura_numero, cliente_codigo,
+	    empleado_codigo, habitacion_codigo, factura_total,
+	    factura_reputacion) VALUES 
+	    ('2021-07-20, 14:28:39', '304', '1', '2', '1', '30', 'Buena');

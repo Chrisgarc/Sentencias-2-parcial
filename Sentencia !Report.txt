@@ -1,0 +1,5 @@
+select distinct  ( case when extract (year from factura_fecha) = '2019' then '2019'
+			when extract (year from factura_fecha) = '2020' then '2020'
+			when extract (year from factura_fecha) = '2021' then '2021'end) as años, sum (factura_total) as total
+from factura
+group by años;
